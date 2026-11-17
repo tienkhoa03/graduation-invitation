@@ -103,9 +103,11 @@ function startSparkles() {
   let running = false;
   let frame = 0;
   let shields = [];
+  const textSelector = ".title, .hero__when, .countdown, .countdown-done, .hero__actions, .letter__body, .section__head, .campus__side h3, .contact__lines, .credits__title, .wish, .wish-empty, .footer__line, .footer__meta";
+  const range = document.createRange();
 
   function measureShields() {
-    shields = [...document.querySelectorAll(".hero__photo, .reel, .snap, .campus__map, .map, .contact__qr, .wish-form")].map((el) => {
+    shields = [...document.querySelectorAll(".hero__photo, .reel, .snap, .campus__map, .map, .contact__qr, .wish-form, .venue__info, .notes, .ticket")].map((el) => {
       const t = getComputedStyle(el).transform;
       const m = t && t !== "none" ? new DOMMatrixReadOnly(t) : null;
       return { el, angle: m ? Math.atan2(m.b, m.a) : 0, w: el.offsetWidth, h: el.offsetHeight };
@@ -127,6 +129,19 @@ function startSparkles() {
       ctx.rotate(s.angle);
       ctx.fillRect(-s.w / 2, -s.h / 2, s.w, s.h);
       ctx.restore();
+    }
+    const list = document.getElementById("wish-list").getBoundingClientRect();
+    for (const el of document.querySelectorAll(textSelector)) {
+      const r = el.getBoundingClientRect();
+      if (el.hidden || r.bottom < 0 || r.top > height) continue;
+      const inList = el.classList.contains("wish");
+      range.selectNodeContents(el);
+      for (const line of range.getClientRects()) {
+        if (!line.width) continue;
+        const top = inList ? Math.max(line.top - 4, list.top) : line.top - 4;
+        const bottom = inList ? Math.min(line.bottom + 4, list.bottom) : line.bottom + 4;
+        if (bottom > top) ctx.fillRect(line.left - 6, top, line.width + 12, bottom - top);
+      }
     }
     ctx.globalCompositeOperation = "source-over";
   }
