@@ -1,9 +1,8 @@
 const SHEET_NAME = "Wishes";
-const HEADERS = ["time", "name", "message", "hidden", "slot", "anonymous"];
-const VERSION = 2;
+const HEADERS = ["time", "name", "message", "hidden", "slot"];
+const VERSION = 3;
 const MAX_NAME = 60;
 const MAX_MESSAGE = 1000;
-const ANONYMOUS_NAME = "Một người bạn";
 const SLOTS = {
   "27": "9h30 – 11h ngày 27/11",
   "28": "12h – 14h ngày 28/11",
@@ -32,17 +31,12 @@ function asText_(value) {
   return /^[=+\-@]/.test(value) ? "'" + value : value;
 }
 
-function isAnonymous_(cell) {
-  return cell === true || String(cell).toUpperCase() === "TRUE";
-}
-
 function doGet() {
   const rows = getSheet_().getDataRange().getValues().slice(1);
   const wishes = rows
     .filter((r) => r[1] && r[2] && !r[3])
     .map((r) => ({
       time: r[0] instanceof Date ? r[0].toISOString() : String(r[0]),
-      name: isAnonymous_(r[5]) ? ANONYMOUS_NAME : String(r[1]),
       message: String(r[2]),
     }))
     .reverse();
@@ -62,12 +56,11 @@ function doPost(e) {
   const message = String(data.message || "").trim().slice(0, MAX_MESSAGE);
   if (!name || !message) return json_({ ok: false, error: "missing_fields" });
   const slot = Object.prototype.hasOwnProperty.call(SLOTS, data.slot) ? SLOTS[data.slot] : "";
-  const anonymous = data.anonymous === true;
 
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
-    getSheet_().appendRow([new Date(), asText_(name), asText_(message), "", slot, anonymous]);
+    getSheet_().appendRow([new Date(), asText_(name), asText_(message), "", slot]);
   } finally {
     lock.releaseLock();
   }

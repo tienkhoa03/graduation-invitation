@@ -378,19 +378,14 @@ function formatTime(date) {
 function renderWish(wish) {
   const li = document.createElement("li");
   li.className = "wish";
-  const head = document.createElement("p");
-  head.className = "wish__name";
-  const name = document.createElement("span");
-  name.textContent = wish.name;
-  const time = document.createElement("span");
-  time.className = "wish__time";
-  const date = new Date(wish.time);
-  time.textContent = isNaN(date) ? "" : formatTime(date);
-  head.append(name, time);
   const msg = document.createElement("p");
   msg.className = "wish__msg";
   msg.textContent = wish.message;
-  li.append(head, msg);
+  const time = document.createElement("p");
+  time.className = "wish__time";
+  const date = new Date(wish.time);
+  time.textContent = isNaN(date) ? "" : formatTime(date);
+  li.append(msg, time);
   return li;
 }
 
@@ -418,7 +413,6 @@ async function loadWishes(highlightFirst = false) {
     const res = await fetch(CONFIG.guestbookUrl, { cache: "no-store" });
     const data = await res.json();
     if (!data.ok) return;
-    document.getElementById("anon-field").hidden = !(data.version >= 2);
     showWishes(data.wishes, highlightFirst);
   } catch (err) {
     console.error("Could not load wishes", err);
@@ -444,12 +438,10 @@ function setupForm() {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const field = (key) => form.elements.namedItem(key).value;
-    const anonymous = form.elements.namedItem("anonymous");
     const payload = {
       name: field("name").trim(),
       slot: field("slot"),
       message: field("message").trim(),
-      anonymous: !anonymous.closest("label").hidden && anonymous.checked,
       website: field("website"),
     };
     if (!payload.name || !payload.message) {
