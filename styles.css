@@ -993,45 +993,78 @@ p { text-wrap: pretty; }
 
 .wish-list {
   list-style: none;
-  margin: 0;
-  padding: 0;
-  max-height: 640px;
+  margin: 14px -10px 0;
+  padding: 10px 10px 16px;
+  display: grid;
+  gap: 22px;
+  max-height: 680px;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--rule-strong) transparent;
 }
 
 .wish-list.is-overflowing {
-  padding-bottom: 32px;
+  padding-bottom: 40px;
   -webkit-mask-image: linear-gradient(to bottom, #000 88%, transparent);
   mask-image: linear-gradient(to bottom, #000 88%, transparent);
 }
 
-.wish { padding: 22px 0; border-bottom: 1px solid var(--rule); }
+.wish {
+  position: relative;
+  padding: 26px 28px 18px;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.35), transparent 40%),
+    linear-gradient(180deg, #f6eedd, #ecdfc6);
+  color: #3b2918;
+  text-shadow: none;
+  box-shadow: 0 16px 30px -14px rgba(0, 0, 0, 0.85), 0 2px 5px rgba(0, 0, 0, 0.3);
+  transform: rotate(var(--tilt, -0.5deg));
+}
 
-.wish:last-child { border-bottom: 0; }
+.wish:nth-child(even) { --tilt: 0.6deg; }
 
-.wish__time {
-  margin: 8px 0 0;
-  font-style: italic;
-  font-size: 1rem;
-  color: var(--faint);
+.wish::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(139, 94, 52, 0.28);
+  pointer-events: none;
+}
+
+.wish::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 30px;
+  height: 36px;
+  border: 1px dashed rgba(139, 94, 52, 0.45);
+  background: radial-gradient(circle at 50% 45%, rgba(231, 160, 76, 0.55) 0 7px, transparent 8px);
 }
 
 .wish__msg {
   margin: 0;
-  font-size: 1.25rem;
-  line-height: 1.5;
+  padding-right: 36px;
+  font-size: 1.2rem;
+  line-height: 1.6;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
-.wish.is-new { animation: wish-new 2.4s var(--ease); }
+.wish__time {
+  margin: 12px 0 0;
+  font-family: var(--script);
+  font-size-adjust: none;
+  font-size: 1.35rem;
+  text-align: right;
+  color: #8b5e34;
+}
+
+.wish.is-new { animation: wish-new 1.6s var(--ease); }
 
 @keyframes wish-new {
-  0% { opacity: 0; transform: translateY(-10px); background: var(--rule); }
-  30% { opacity: 1; transform: none; }
-  100% { background: transparent; }
+  from { opacity: 0; transform: translateY(-14px) rotate(var(--tilt, -0.5deg)); }
+  to { opacity: 1; transform: rotate(var(--tilt, -0.5deg)); }
 }
 
 .wish-empty { padding: 22px 0; font-style: italic; font-size: 1.25rem; color: var(--muted); }

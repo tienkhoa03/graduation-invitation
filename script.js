@@ -4,27 +4,62 @@ const CONFIG = {
 };
 
 const REEL_FRAMES = [
-  "images/frames/01.jpg?v=2",
-  "images/frames/02.jpg?v=2",
-  "images/frames/15.jpg",
+  "images/frames/04.jpg?v=3",
+  "images/frames/06.jpg?v=3",
+  "images/frames/22.jpg?v=3",
+  "images/frames/01.jpg?v=3",
+  "images/frames/16.jpg?v=3",
+  "images/frames/23.jpg?v=3",
+  "images/frames/15.jpg?v=3",
   "images/frames/03.jpg?v=3",
-  "images/frames/16.jpg",
-  "images/frames/04.jpg?v=2",
-  "images/frames/05.jpg?v=2",
-  "images/frames/17.jpg",
-  "images/frames/06.jpg?v=2",
-  "images/frames/07.jpg?v=2",
-  "images/frames/18.jpg",
-  "images/frames/08.jpg?v=2",
-  "images/frames/21.jpg",
-  "images/frames/09.jpg?v=2",
-  "images/frames/19.jpg",
-  "images/frames/10.jpg?v=2",
-  "images/frames/11.jpg?v=2",
-  "images/frames/20.jpg",
-  "images/frames/12.jpg?v=2",
-  "images/frames/13.jpg?v=2",
-  "images/frames/14.jpg?v=2",
+  "images/frames/08.jpg?v=3",
+  "images/frames/24.jpg?v=3",
+  "images/frames/25.jpg?v=3",
+  "images/frames/26.jpg?v=3",
+  "images/frames/17.jpg?v=3",
+  "images/frames/07.jpg?v=3",
+  "images/frames/21.jpg?v=3",
+  "images/frames/27.jpg?v=3",
+  "images/frames/28.jpg?v=3",
+  "images/frames/29.jpg?v=3",
+  "images/frames/02.jpg?v=3",
+  "images/frames/18.jpg?v=3",
+  "images/frames/30.jpg?v=3",
+  "images/frames/31.jpg?v=3",
+  "images/frames/32.jpg?v=3",
+  "images/frames/10.jpg?v=3",
+  "images/frames/19.jpg?v=3",
+  "images/frames/33.jpg?v=3",
+  "images/frames/34.jpg?v=3",
+  "images/frames/35.jpg?v=3",
+  "images/frames/05.jpg?v=3",
+  "images/frames/20.jpg?v=3",
+  "images/frames/36.jpg?v=3",
+  "images/frames/37.jpg?v=3",
+  "images/frames/38.jpg?v=3",
+  "images/frames/39.jpg?v=3",
+  "images/frames/40.jpg?v=3",
+  "images/frames/41.jpg?v=3",
+  "images/frames/42.jpg?v=3",
+  "images/frames/43.jpg?v=3",
+  "images/frames/44.jpg?v=3",
+  "images/frames/13.jpg?v=3",
+  "images/frames/14.jpg?v=3",
+  "images/frames/09.jpg?v=3",
+  "images/frames/45.jpg?v=3",
+  "images/frames/12.jpg?v=3",
+  "images/frames/46.jpg?v=3",
+  "images/frames/47.jpg?v=3",
+  "images/frames/48.jpg?v=3",
+  "images/frames/49.jpg?v=3",
+  "images/frames/50.jpg?v=3",
+  "images/frames/51.jpg?v=3",
+  "images/frames/52.jpg?v=3",
+  "images/frames/53.jpg?v=3",
+  "images/frames/54.jpg?v=3",
+  "images/frames/55.jpg?v=3",
+  "images/frames/11.jpg?v=3",
+  "images/frames/56.jpg?v=3",
 ];
 
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -59,10 +94,9 @@ function startCountdown() {
 
 function buildReel() {
   const track = document.getElementById("reel-track");
-  const frames = [];
-  for (let i = 0; i < 2; i++) frames.push(...REEL_FRAMES);
-  const html = frames.map((src) => `<div class="reel__frame"><img src="${src}" alt="" loading="lazy"></div>`).join("");
+  const html = REEL_FRAMES.map((src) => `<div class="reel__frame"><img src="${src}" alt="" loading="lazy"></div>`).join("");
   track.innerHTML = html + html;
+  track.style.animationDuration = `${Math.round((REEL_FRAMES.length * 198) / 75)}s`;
 }
 
 function startSparkles() {
@@ -135,6 +169,12 @@ function startSparkles() {
       const r = el.getBoundingClientRect();
       if (el.hidden || r.bottom < 0 || r.top > height) continue;
       const inList = el.classList.contains("wish");
+      if (inList) {
+        const top = Math.max(r.top, list.top);
+        const bottom = Math.min(r.bottom, list.bottom);
+        if (bottom > top) ctx.fillRect(r.left - 4, top, r.width + 8, bottom - top);
+        continue;
+      }
       range.selectNodeContents(el);
       for (const line of range.getClientRects()) {
         if (!line.width) continue;
