@@ -13,17 +13,18 @@
   <meta name="theme-color" content="#0c0805">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=29">
   <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
   <div class="grain" aria-hidden="true"></div>
+  <canvas class="sparkles" id="sparkles" aria-hidden="true"></canvas>
 
   <header class="topbar" id="topbar">
-    <a class="topbar__mark" href="#top">Graduation <span>2026</span></a>
+    <a class="topbar__mark" href="#top">BK <i>·</i> 2026</a>
     <nav class="topbar__nav" aria-label="Mục lục">
-      <a href="#schedule">Lịch trình</a>
+      <a href="#schedule">Thời gian</a>
       <a href="#venue">Địa điểm</a>
       <a href="#wishes">Lời chúc</a>
     </nav>
@@ -33,53 +34,37 @@
     <div class="hero__light" aria-hidden="true">
       <span class="leak leak--a"></span>
       <span class="leak leak--b"></span>
-      <span class="leak leak--c"></span>
     </div>
-    <canvas class="hero__dust" id="dust" aria-hidden="true"></canvas>
     <span class="letterbox letterbox--top" aria-hidden="true"></span>
     <span class="letterbox letterbox--bottom" aria-hidden="true"></span>
 
-    <div class="hero__inner">
-      <div class="hero__copy">
-        <p class="kicker intro intro--1">Thương mời <em>những người thân thương</em></p>
-        <h1 class="title intro intro--2">
-          <span class="title__serif">Graduation</span>
-          <span class="title__script">Invitation</span>
-        </h1>
-        <dl class="facts intro intro--3">
-          <div>
-            <dt>Ngày</dt>
-            <dd>27 &amp; 28 · 11 · 2026</dd>
-          </div>
-          <div>
-            <dt>Tại</dt>
-            <dd>Trường Đại học Bách khoa<br>ĐHQG TP. HCM</dd>
-          </div>
-        </dl>
-        <div class="countdown intro intro--4" id="countdown" aria-live="polite">
-          <div><span data-unit="days">--</span><small>ngày</small></div>
-          <div><span data-unit="hours">--</span><small>giờ</small></div>
-          <div><span data-unit="minutes">--</span><small>phút</small></div>
-          <div><span data-unit="seconds">--</span><small>giây</small></div>
-        </div>
-        <p class="countdown-done" id="countdown-done" hidden>Hôm nay là ngày đặc biệt — hẹn gặp bạn nhé.</p>
-        <div class="hero__actions intro intro--5">
-          <a class="btn btn--solid" href="#wishes">Gửi lời chúc</a>
-          <a class="btn" href="#venue">Xem đường đi</a>
-        </div>
+    <figure class="hero__card intro intro--card">
+      <div class="hero__frame">
+        <img class="hero__ambient" src="images/invitation-scene.jpg?v=2" alt="" aria-hidden="true" width="1602" height="1804">
+        <img class="hero__photo" src="images/invitation.jpg" alt="Thiệp mời lễ tốt nghiệp: một tân cử nhân bước lên bậc thềm Bách Khoa" width="960" height="1200">
       </div>
+    </figure>
 
-      <figure class="poster intro intro--poster">
-        <div class="poster__frame">
-          <img src="images/invitation.jpg" alt="Thiệp mời lễ tốt nghiệp" width="960" height="1200">
-          <span class="poster__sheen" aria-hidden="true"></span>
-        </div>
-      </figure>
+    <div class="hero__copy">
+      <h1 class="title intro intro--2">
+        <span class="title__serif">Graduation</span>
+        <span class="title__script">Invitation</span>
+      </h1>
+      <p class="hero__when intro intro--3">
+        <i>Thứ Sáu 27 &amp; Thứ Bảy 28</i> <i>tháng Mười Một, 2026</i>
+        <span>Trường Đại học Bách&nbsp;khoa — ĐHQG TP.&nbsp;HCM</span>
+      </p>
+      <div class="countdown intro intro--4" id="countdown" aria-live="polite">
+        <div><span data-unit="days">--</span><small>ngày</small></div>
+        <div><span data-unit="hours">--</span><small>giờ</small></div>
+        <div><span data-unit="minutes">--</span><small>phút</small></div>
+        <div><span data-unit="seconds">--</span><small>giây</small></div>
+      </div>
+      <p class="countdown-done" id="countdown-done" hidden>Hôm nay là ngày đặc biệt — hẹn gặp bạn nhé.</p>
+      <div class="hero__actions intro intro--5">
+        <a class="arrow-link" href="#wishes">Gửi lời chúc</a>
+      </div>
     </div>
-
-    <a class="scroll-cue" href="#schedule" aria-label="Cuộn xuống">
-      <span></span>
-    </a>
   </section>
 
   <div class="reel" aria-hidden="true">
@@ -87,114 +72,194 @@
   </div>
 
   <main>
-    <section class="section" id="schedule">
-      <header class="section__head" data-reveal>
-        <span class="section__no">01</span>
-        <h2>Lịch trình</h2>
-      </header>
-
-      <div class="tickets">
-        <article class="ticket" data-reveal>
-          <div class="ticket__stub">
-            <span>Buổi</span>
-            <strong>01</strong>
-          </div>
-          <div class="ticket__body">
-            <p class="ticket__day">Thứ Sáu</p>
-            <p class="ticket__date">
-              <span class="ticket__num">27</span>
-              <span class="ticket__month">Tháng 11<br>2026</span>
-            </p>
-            <p class="ticket__time">9h30 — 11h00</p>
-            <a class="arrow-link" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=L%E1%BB%85%20t%E1%BB%91t%20nghi%E1%BB%87p&amp;dates=20261127T023000Z/20261127T040000Z&amp;location=Tr%C6%B0%E1%BB%9Dng%20%C4%90%E1%BA%A1i%20h%E1%BB%8Dc%20B%C3%A1ch%20khoa%20-%20%C4%90HQG%20TP.HCM%2C%20268%20L%C3%BD%20Th%C6%B0%E1%BB%9Dng%20Ki%E1%BB%87t%2C%20TP.%20H%E1%BB%93%20Ch%C3%AD%20Minh">Thêm vào lịch Google</a>
-          </div>
-        </article>
-
-        <article class="ticket" data-reveal>
-          <div class="ticket__stub">
-            <span>Buổi</span>
-            <strong>02</strong>
-          </div>
-          <div class="ticket__body">
-            <p class="ticket__day">Thứ Bảy</p>
-            <p class="ticket__date">
-              <span class="ticket__num">28</span>
-              <span class="ticket__month">Tháng 11<br>2026</span>
-            </p>
-            <p class="ticket__time">12h00 — 14h00</p>
-            <a class="arrow-link" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=L%E1%BB%85%20t%E1%BB%91t%20nghi%E1%BB%87p&amp;dates=20261128T050000Z/20261128T070000Z&amp;location=Tr%C6%B0%E1%BB%9Dng%20%C4%90%E1%BA%A1i%20h%E1%BB%8Dc%20B%C3%A1ch%20khoa%20-%20%C4%90HQG%20TP.HCM%2C%20268%20L%C3%BD%20Th%C6%B0%E1%BB%9Dng%20Ki%E1%BB%87t%2C%20TP.%20H%E1%BB%93%20Ch%C3%AD%20Minh">Thêm vào lịch Google</a>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section" id="venue">
-      <header class="section__head" data-reveal>
-        <span class="section__no">02</span>
-        <h2>Địa điểm</h2>
-      </header>
-
-      <div class="venue">
-        <div class="venue__info" data-reveal>
-          <p class="venue__name">Trường Đại học Bách khoa <em>ĐHQG TP. HCM</em></p>
-          <p class="venue__addr">268 Lý Thường Kiệt, phường Diên Hồng, TP. HCM</p>
-          <p class="venue__coords">10.772° N &nbsp;·&nbsp; 106.658° E</p>
-          <a class="btn btn--solid" target="_blank" rel="noopener"
-            href="https://www.google.com/maps/search/?api=1&amp;query=Tr%C6%B0%E1%BB%9Dng%20%C4%90%E1%BA%A1i%20h%E1%BB%8Dc%20B%C3%A1ch%20khoa%20-%20%C4%90HQG%20TP.HCM%2C%20268%20L%C3%BD%20Th%C6%B0%E1%BB%9Dng%20Ki%E1%BB%87t%2C%20TP.%20H%E1%BB%93%20Ch%C3%AD%20Minh">Chỉ đường trên Google Maps</a>
-        </div>
-
-        <div class="viewfinder" data-reveal>
-          <span class="viewfinder__corner viewfinder__corner--tl" aria-hidden="true"></span>
-          <span class="viewfinder__corner viewfinder__corner--tr" aria-hidden="true"></span>
-          <span class="viewfinder__corner viewfinder__corner--bl" aria-hidden="true"></span>
-          <span class="viewfinder__corner viewfinder__corner--br" aria-hidden="true"></span>
-          <iframe title="Bản đồ Trường Đại học Bách khoa" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-            src="https://maps.google.com/maps?q=Tr%C6%B0%E1%BB%9Dng%20%C4%90%E1%BA%A1i%20h%E1%BB%8Dc%20B%C3%A1ch%20khoa%20-%20%C4%90HQG%20TP.HCM%2C%20268%20L%C3%BD%20Th%C6%B0%E1%BB%9Dng%20Ki%E1%BB%87t%2C%20TP.%20H%E1%BB%93%20Ch%C3%AD%20Minh&amp;z=16&amp;output=embed"></iframe>
+    <section class="band band--letter" id="letter">
+      <div class="band__inner letter">
+        <p class="letter__body" data-reveal>
+          Những năm tháng ở Bách&nbsp;Khoa — những mùa thi, những đêm chạy đồ án, những hoạt động xã hội, những người đã đi cùng mình qua tất cả.
+          Ngày khép lại chương này sẽ trọn vẹn hơn rất nhiều nếu có bạn ở đó.
+        </p>
+        <div class="scatter" data-reveal>
+          <figure class="snap snap--a">
+            <img src="images/memories/defense.jpg" alt="Mình đứng cạnh bảng Bảo vệ đồ án tốt nghiệp" width="480" height="600" loading="lazy">
+            <figcaption>Bảo vệ đồ án</figcaption>
+          </figure>
+          <figure class="snap snap--b snap--wide">
+            <img src="images/memories/sv5t.jpg" alt="Nhận giấy khen Sinh viên 5 Tốt" width="640" height="480" loading="lazy">
+            <figcaption>Sinh viên 5 Tốt</figcaption>
+          </figure>
+          <figure class="snap snap--c">
+            <img src="images/memories/xtn-portrait.jpg" alt="Mình trong áo Xuân tình nguyện" width="480" height="600" loading="lazy">
+            <figcaption>Xuân tình nguyện</figcaption>
+          </figure>
+          <figure class="snap snap--d">
+            <img src="images/memories/mhx-portrait.jpg" alt="Mình trong chiến dịch Mùa hè xanh" width="480" height="600" loading="lazy">
+            <figcaption>Mùa hè xanh</figcaption>
+          </figure>
+          <figure class="snap snap--e">
+            <img src="images/memories/qp-stairs.jpg" alt="Cả nhóm trong đợt học Quốc phòng" width="480" height="600" loading="lazy">
+            <figcaption>Quốc phòng</figcaption>
+          </figure>
+          <figure class="snap snap--f snap--wide">
+            <img src="images/memories/bkfc.jpg" alt="Cùng BK FC Chuyên Tiền Giang trước sảnh trường" width="640" height="480" loading="lazy">
+            <figcaption><span class="snap__abbr">BK FC</span> Chuyên Tiền Giang</figcaption>
+          </figure>
+          <figure class="snap snap--h snap--wide">
+            <img src="images/memories/talent-class.jpg" alt="Cùng các bạn lớp tài năng bên mô hình tháp" width="640" height="480" loading="lazy">
+            <figcaption>Lớp tài năng</figcaption>
+          </figure>
+          <figure class="snap snap--i snap--wide">
+            <img src="images/memories/ktx.jpg" alt="Anh em ký túc xá trên đường đi chơi" width="640" height="480" loading="lazy">
+            <figcaption>Anh em KTX</figcaption>
+          </figure>
+          <figure class="snap snap--g">
+            <img src="images/memories/drt-campus.jpg" alt="Cùng CLB Tình nguyện trẻ Bách Khoa trong sân trường" width="480" height="600" loading="lazy">
+            <figcaption><span class="snap__abbr">BK-DRT</span> - Tình nguyện trẻ Bách Khoa</figcaption>
+          </figure>
         </div>
       </div>
     </section>
 
-    <section class="section" id="wishes">
-      <header class="section__head" data-reveal>
-        <span class="section__no">03</span>
-        <h2>Lời chúc</h2>
-        <p class="section__note">Để lại vài dòng cho mình nhé — mình sẽ đọc hết từng lời.</p>
-      </header>
+    <section class="band band--schedule" id="schedule">
+      <div class="band__inner">
+        <header class="section__head" data-reveal>
+          <h2>Thời gian</h2>
+          <p class="section__note">Lễ chia làm hai buổi. Bạn tiện buổi nào thì ghé buổi đó nhé.</p>
+        </header>
 
-      <div class="wishes">
-        <form class="wish-form" id="wish-form" novalidate data-reveal>
-          <label class="field">
-            <span>Tên của bạn</span>
-            <input name="name" maxlength="60" required autocomplete="name" placeholder="Minh Anh">
-          </label>
-          <label class="field">
-            <span>Lời chúc</span>
-            <textarea name="message" maxlength="1000" rows="4" required placeholder="Chúc mừng tốt nghiệp…"></textarea>
-          </label>
-          <label class="hp" aria-hidden="true">
-            <span>Website</span>
-            <input name="website" tabindex="-1" autocomplete="off">
-          </label>
-          <div class="wish-form__foot">
-            <button class="btn btn--solid" type="submit">Gửi lời chúc</button>
-            <p class="form-status" id="form-status" role="status"></p>
+        <div class="tickets">
+          <article class="ticket" data-reveal>
+            <div class="ticket__stub">
+              <span>buổi</span>
+              <strong>I</strong>
+            </div>
+            <div class="ticket__body">
+              <p class="ticket__day">Thứ Sáu</p>
+              <p class="ticket__date">
+                <span class="ticket__num">27</span>
+                <span class="ticket__month">tháng Mười Một<br>2026</span>
+              </p>
+              <p class="ticket__time">9h30 — 11h00</p>
+              <a class="arrow-link" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=L%E1%BB%85%20t%E1%BB%91t%20nghi%E1%BB%87p&amp;dates=20261127T023000Z/20261127T040000Z&amp;location=Tr%C6%B0%E1%BB%9Dng%20%C4%90%E1%BA%A1i%20h%E1%BB%8Dc%20B%C3%A1ch%20khoa%20-%20%C4%90HQG%20TP.HCM%2C%20268%20L%C3%BD%20Th%C6%B0%E1%BB%9Dng%20Ki%E1%BB%87t%2C%20TP.%20H%E1%BB%93%20Ch%C3%AD%20Minh">Thêm vào lịch</a>
+            </div>
+          </article>
+
+          <article class="ticket" data-reveal>
+            <div class="ticket__stub">
+              <span>buổi</span>
+              <strong>II</strong>
+            </div>
+            <div class="ticket__body">
+              <p class="ticket__day">Thứ Bảy</p>
+              <p class="ticket__date">
+                <span class="ticket__num">28</span>
+                <span class="ticket__month">tháng Mười Một<br>2026</span>
+              </p>
+              <p class="ticket__time">12h00 — 14h00</p>
+              <a class="arrow-link" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=L%E1%BB%85%20t%E1%BB%91t%20nghi%E1%BB%87p&amp;dates=20261128T050000Z/20261128T070000Z&amp;location=Tr%C6%B0%E1%BB%9Dng%20%C4%90%E1%BA%A1i%20h%E1%BB%8Dc%20B%C3%A1ch%20khoa%20-%20%C4%90HQG%20TP.HCM%2C%20268%20L%C3%BD%20Th%C6%B0%E1%BB%9Dng%20Ki%E1%BB%87t%2C%20TP.%20H%E1%BB%93%20Ch%C3%AD%20Minh">Thêm vào lịch</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band--venue" id="venue">
+      <div class="band__inner">
+        <header class="section__head" data-reveal>
+          <h2>Địa điểm</h2>
+          <p class="section__note">Lễ diễn ra ở Hội trường A5, ngay trong khuôn viên trường.</p>
+        </header>
+        <div class="venue">
+          <div class="venue__info" data-reveal>
+            <p class="venue__name">Trường Đại học Bách&nbsp;khoa <em>ĐHQG TP.&nbsp;HCM</em></p>
+            <p class="venue__addr">268 Lý Thường Kiệt, phường Diên&nbsp;Hồng, TP.&nbsp;HCM</p>
+            <a class="btn" target="_blank" rel="noopener"
+              href="https://maps.app.goo.gl/sCh3au5J1c5oSRQt7">Chỉ đường trên Google Maps</a>
           </div>
-        </form>
+          <div class="map" data-reveal>
+            <iframe title="Bản đồ Trường Đại học Bách khoa" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+              src="https://maps.google.com/maps?q=10.772075,106.6579018&amp;z=17&amp;output=embed"></iframe>
+          </div>
+        </div>
 
-        <div class="credits" data-reveal>
-          <p class="credits__title">Với lời chúc từ</p>
-          <ol class="wish-list" id="wish-list" aria-live="polite"></ol>
+        <div class="campus">
+          <a class="campus__map" href="images/campus-map.jpg" target="_blank" rel="noopener" data-reveal>
+            <img src="images/campus-map.jpg" alt="Sơ đồ trường: bãi xe gần Cổng 1 và Cổng 3, Hội trường A5 ở giữa trường" width="1726" height="821" loading="lazy">
+            <span class="campus__zoom">Bấm để xem sơ đồ lớn</span>
+          </a>
+          <div class="campus__side" data-reveal>
+            <h3>Vào trường rồi thì…</h3>
+            <ul class="notes">
+              <li><b>Gửi xe</b> ở bãi gần Cổng&nbsp;1 (Lý Thường Kiệt) hoặc Cổng&nbsp;3 (Tô Hiến Thành), chỗ có chữ P trên sơ đồ.</li>
+              <li><b>Không thấy mình đâu?</b> Gọi hoặc nhắn Zalo cho mình nha.</li>
+            </ul>
+            <div class="contact">
+              <div class="contact__lines">
+                <a class="contact__phone" href="tel:0328170713">0328 170 713</a>
+                <a class="arrow-link" href="https://zaloapp.com/qr/p/esy4hqw644pm" target="_blank" rel="noopener">Nhắn Zalo</a>
+              </div>
+              <figure class="contact__qr">
+                <img src="images/zalo-qr.jpg" alt="Mã QR Zalo của mình" width="504" height="504" loading="lazy">
+                <figcaption>Quét để kết bạn Zalo</figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band--wishes" id="wishes">
+      <div class="band__inner">
+        <header class="section__head" data-reveal>
+          <h2>Lời chúc</h2>
+          <p class="section__note">Để lại vài dòng cho mình nhé, và cho mình biết bạn định ghé lúc nào để mình ra đón.</p>
+        </header>
+
+        <div class="wishes">
+          <form class="wish-form" id="wish-form" novalidate data-reveal>
+            <label class="field">
+              <span>Tên của bạn</span>
+              <input name="name" maxlength="60" required autocomplete="name" placeholder="Minh Anh">
+            </label>
+            <fieldset class="field choices">
+              <legend>Bạn ghé lúc nào?</legend>
+              <label class="choice"><input type="radio" name="slot" value="27" required><span>9h30 – 11h ngày 27/11</span></label>
+              <label class="choice"><input type="radio" name="slot" value="28"><span>12h – 14h ngày 28/11</span></label>
+              <label class="choice"><input type="radio" name="slot" value="later"><span>Hẹn dịp khác nhó</span></label>
+            </fieldset>
+            <label class="field">
+              <span>Lời chúc</span>
+              <textarea name="message" maxlength="1000" rows="3" required placeholder="Chúc mừng tốt nghiệp…"></textarea>
+            </label>
+            <label class="check" id="anon-field" hidden>
+              <input type="checkbox" name="anonymous">
+              <span>Ẩn tên mình khi hiện lời chúc</span>
+            </label>
+            <label class="hp" aria-hidden="true">
+              <span>Website</span>
+              <input name="website" tabindex="-1" autocomplete="off">
+            </label>
+            <div class="wish-form__foot">
+              <button class="btn" type="submit">Gửi lời chúc</button>
+              <p class="form-status" id="form-status" role="status"></p>
+            </div>
+          </form>
+
+          <div class="credits" data-reveal>
+            <p class="credits__title">Với lời chúc từ</p>
+            <ol class="wish-list" id="wish-list" aria-live="polite"></ol>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="footer__glow" aria-hidden="true"></div>
-    <p class="footer__line" data-reveal>Hẹn gặp bạn</p>
-    <p class="footer__meta" data-reveal>27 &amp; 28 · 11 · 2026 &nbsp;—&nbsp; Trường Đại học Bách khoa, TP. HCM</p>
+  <footer class="band band--footer">
+    <div class="band__inner footer">
+      <p class="footer__line" data-reveal>Hẹn gặp bạn</p>
+      <p class="footer__meta" data-reveal>27 &amp; 28 tháng Mười Một, 2026 · Trường Đại học Bách&nbsp;khoa, TP.&nbsp;HCM</p>
+    </div>
   </footer>
 
-  <script src="script.js?v=2"></script>
+  <script src="script.js?v=16"></script>
 </body>
 </html>

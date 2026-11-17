@@ -4,14 +4,26 @@ const CONFIG = {
 };
 
 const REEL_FRAMES = [
-  { src: "images/frames/01.jpg" },
-  { text: "2026" },
-  { src: "images/frames/02.jpg" },
-  { src: "images/frames/03.jpg" },
-  { text: "Bách Khoa" },
-  { src: "images/frames/04.jpg" },
-  { src: "images/frames/05.jpg" },
-  { text: "27 · 11" },
+  "images/frames/01.jpg?v=2",
+  "images/frames/02.jpg?v=2",
+  "images/frames/15.jpg",
+  "images/frames/03.jpg?v=3",
+  "images/frames/16.jpg",
+  "images/frames/04.jpg?v=2",
+  "images/frames/05.jpg?v=2",
+  "images/frames/17.jpg",
+  "images/frames/06.jpg?v=2",
+  "images/frames/07.jpg?v=2",
+  "images/frames/18.jpg",
+  "images/frames/08.jpg?v=2",
+  "images/frames/09.jpg?v=2",
+  "images/frames/19.jpg",
+  "images/frames/10.jpg?v=2",
+  "images/frames/11.jpg?v=2",
+  "images/frames/20.jpg",
+  "images/frames/12.jpg?v=2",
+  "images/frames/13.jpg?v=2",
+  "images/frames/14.jpg?v=2",
 ];
 
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -31,10 +43,11 @@ function startCountdown() {
       return false;
     }
     const s = Math.floor(diff / 1000);
-    units.days.textContent = String(Math.floor(s / 86400)).padStart(2, "0");
-    units.hours.textContent = String(Math.floor((s % 86400) / 3600)).padStart(2, "0");
-    units.minutes.textContent = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
-    units.seconds.textContent = String(s % 60).padStart(2, "0");
+    const pad = (n) => String(n).padStart(2, "0");
+    units.days.textContent = pad(Math.floor(s / 86400));
+    units.hours.textContent = pad(Math.floor((s % 86400) / 3600));
+    units.minutes.textContent = pad(Math.floor((s % 3600) / 60));
+    units.seconds.textContent = pad(s % 60);
     return true;
   }
 
@@ -46,102 +59,223 @@ function startCountdown() {
 function buildReel() {
   const track = document.getElementById("reel-track");
   const frames = [];
-  for (let i = 0; i < 3; i++) frames.push(...REEL_FRAMES);
-  const html = frames.map((f) => f.src
-    ? `<div class="reel__frame"><img src="${f.src}" alt="" loading="lazy"></div>`
-    : `<div class="reel__frame reel__frame--text">${f.text}</div>`).join("");
+  for (let i = 0; i < 2; i++) frames.push(...REEL_FRAMES);
+  const html = frames.map((src) => `<div class="reel__frame"><img src="${src}" alt="" loading="lazy"></div>`).join("");
   track.innerHTML = html + html;
 }
 
-function startDust() {
-  const canvas = document.getElementById("dust");
-  const hero = canvas.parentElement;
+function startSparkles() {
+  const canvas = document.getElementById("sparkles");
   const ctx = canvas.getContext("2d");
+  const css = getComputedStyle(document.documentElement);
+  const tone = (name) => css.getPropertyValue(name).trim();
+  const dustWarm = tone("--dust-warm");
+  const dustCool = tone("--dust-cool");
+  const dustHalo = tone("--dust-halo");
+  const emberHead = tone("--ember-head");
+  const emberTail = tone("--ember-tail");
+  const flakeTones = ["243, 207, 143", "255, 241, 208", "231, 160, 76", "240, 180, 138"];
   const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  const rand = (min, max) => min + Math.random() * (max - min);
+  const glow = document.createElement("canvas");
+  glow.width = glow.height = 64;
+  const glowCtx = glow.getContext("2d");
+  const glowGrad = glowCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
+  glowGrad.addColorStop(0, `rgba(${dustHalo}, 1)`);
+  glowGrad.addColorStop(0.2, `rgba(${dustHalo}, 0.4)`);
+  glowGrad.addColorStop(1, `rgba(${dustHalo}, 0)`);
+  glowCtx.fillStyle = glowGrad;
+  glowCtx.fillRect(0, 0, 64, 64);
+
+  function drawGlow(x, y, radius, alpha) {
+    ctx.globalAlpha = alpha;
+    ctx.drawImage(glow, x - radius, y - radius, radius * 2, radius * 2);
+    ctx.globalAlpha = 1;
+  }
   let width = 0;
   let height = 0;
   let motes = [];
+  let flakes = [];
+  let glints = [];
   let embers = [];
+  let lastScroll = window.scrollY;
   let running = false;
-  let visible = true;
   let frame = 0;
+  let shields = [];
 
-  function makeMote(randomY) {
+  function measureShields() {
+    shields = [...document.querySelectorAll(".hero__photo, .reel, .snap, .campus__map, .map, .contact__qr, .wish-form")].map((el) => {
+      const t = getComputedStyle(el).transform;
+      const m = t && t !== "none" ? new DOMMatrixReadOnly(t) : null;
+      return { el, angle: m ? Math.atan2(m.b, m.a) : 0, w: el.offsetWidth, h: el.offsetHeight };
+    });
+  }
+
+  function cutShields() {
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.fillStyle = "#000";
+    for (const s of shields) {
+      const r = s.el.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > height || r.right < 0 || r.left > width) continue;
+      if (Math.abs(s.angle) < 0.001) {
+        ctx.fillRect(r.left, r.top, r.width, r.height);
+        continue;
+      }
+      ctx.save();
+      ctx.translate(r.left + r.width / 2, r.top + r.height / 2);
+      ctx.rotate(s.angle);
+      ctx.fillRect(-s.w / 2, -s.h / 2, s.w, s.h);
+      ctx.restore();
+    }
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  function makeMote(anywhere) {
     return {
-      x: Math.random() * width,
-      y: randomY ? Math.random() * height : height + 10,
-      r: Math.random() * 1.4 + 0.3,
-      vy: -(Math.random() * 0.25 + 0.05),
-      sway: Math.random() * Math.PI * 2,
-      swaySpeed: Math.random() * 0.01 + 0.004,
-      twinkle: Math.random() * Math.PI * 2,
-      twinkleSpeed: Math.random() * 0.04 + 0.01,
+      x: rand(0, width),
+      y: anywhere ? rand(0, height) : height + 10,
+      r: rand(0.3, 1.6),
+      vy: -rand(0.05, 0.3),
+      depth: rand(0.15, 0.5),
+      sway: rand(0, Math.PI * 2),
+      swaySpeed: rand(0.004, 0.014),
+      twinkle: rand(0, Math.PI * 2),
+      twinkleSpeed: rand(0.01, 0.05),
       warm: Math.random() < 0.6,
     };
+  }
+
+  function makeFlake(anywhere) {
+    return {
+      x: rand(0, width),
+      y: anywhere ? rand(0, height) : -10,
+      size: rand(3, 6.2),
+      vy: rand(0.25, 0.75),
+      depth: rand(0.3, 0.9),
+      sway: rand(0, Math.PI * 2),
+      swaySpeed: rand(0.008, 0.02),
+      swayAmp: rand(0.3, 0.9),
+      angle: rand(0, Math.PI * 2),
+      spin: rand(-0.03, 0.03),
+      flip: rand(0, Math.PI * 2),
+      flipSpeed: rand(0.04, 0.11),
+      tone: flakeTones[Math.floor(Math.random() * flakeTones.length)],
+    };
+  }
+
+  function makeGlint() {
+    return { x: rand(0, width), y: rand(0, height), size: rand(5, 13), life: 0, max: rand(50, 110), rot: rand(0, Math.PI / 4) };
   }
 
   function makeEmber() {
     const fromLeft = Math.random() < 0.5;
     return {
-      x: fromLeft ? Math.random() * width * 0.4 : width * (0.6 + Math.random() * 0.4),
-      y: height * (0.55 + Math.random() * 0.45),
-      vx: (fromLeft ? 1 : -1) * (Math.random() * 0.6 + 0.3),
-      vy: -(Math.random() * 1.1 + 0.6),
+      x: fromLeft ? rand(0, width * 0.4) : rand(width * 0.6, width),
+      y: rand(height * 0.55, height),
+      vx: (fromLeft ? 1 : -1) * rand(0.3, 0.9),
+      vy: -rand(0.6, 1.7),
       life: 0,
-      max: Math.random() * 140 + 120,
-      len: Math.random() * 14 + 10,
+      max: rand(120, 260),
+      len: rand(10, 24),
     };
   }
 
   function resize() {
-    width = hero.clientWidth;
-    height = hero.clientHeight;
+    width = window.innerWidth;
+    height = window.innerHeight;
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const count = Math.min(110, Math.round((width * height) / 11000));
-    motes = Array.from({ length: count }, () => makeMote(true));
+    const area = width * height;
+    motes = Array.from({ length: Math.min(24, Math.round(area / 52000)) }, () => makeMote(true));
+    flakes = Array.from({ length: Math.min(12, Math.round(area / 84000)) }, () => makeFlake(true));
+    glints = [];
     embers = [];
   }
 
-  function draw() {
-    ctx.clearRect(0, 0, width, height);
-    ctx.globalCompositeOperation = "lighter";
+  function wrap(p, margin) {
+    if (p.y < -margin) p.y += height + margin * 2;
+    else if (p.y > height + margin) p.y -= height + margin * 2;
+    if (p.x < -margin) p.x += width + margin * 2;
+    else if (p.x > width + margin) p.x -= width + margin * 2;
+  }
 
+  function drawMotes(scrollDelta) {
     for (const m of motes) {
-      m.y += m.vy;
+      m.y += m.vy - scrollDelta * m.depth;
       m.sway += m.swaySpeed;
       m.twinkle += m.twinkleSpeed;
       m.x += Math.sin(m.sway) * 0.2;
-      if (m.y < -10) Object.assign(m, makeMote(false));
-      const heightFade = Math.min(1, (m.y / height) * 1.6);
-      const a = (0.35 + 0.65 * Math.abs(Math.sin(m.twinkle))) * heightFade;
-      ctx.fillStyle = m.warm ? `rgba(255, 196, 120, ${a})` : `rgba(255, 238, 205, ${a})`;
+      wrap(m, 10);
+      const a = 0.25 + 0.75 * Math.abs(Math.sin(m.twinkle));
+      ctx.fillStyle = `rgba(${m.warm ? dustWarm : dustCool}, ${a})`;
       ctx.beginPath();
       ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
       ctx.fill();
-      if (m.r > 1.3 && a > 0.75) {
-        ctx.fillStyle = `rgba(255, 220, 160, ${a * 0.15})`;
-        ctx.beginPath();
-        ctx.arc(m.x, m.y, m.r * 5, 0, Math.PI * 2);
-        ctx.fill();
-      }
+      if (m.r > 1.1) drawGlow(m.x, m.y, m.r * 6, a * 0.35);
     }
+  }
 
-    if (embers.length < 5 && Math.random() < 0.02) embers.push(makeEmber());
+  function drawFlakes(scrollDelta) {
+    for (const f of flakes) {
+      f.sway += f.swaySpeed;
+      f.y += f.vy - scrollDelta * f.depth;
+      f.x += Math.sin(f.sway) * f.swayAmp;
+      f.angle += f.spin;
+      f.flip += f.flipSpeed;
+      wrap(f, 12);
+      const face = Math.cos(f.flip);
+      const shine = Math.abs(Math.sin(f.flip * 0.5 + f.angle));
+      ctx.save();
+      ctx.translate(f.x, f.y);
+      ctx.rotate(f.angle);
+      ctx.scale(1, Math.max(0.08, Math.abs(face)));
+      ctx.fillStyle = `rgba(${f.tone}, ${0.35 + 0.6 * shine})`;
+      ctx.fillRect(-f.size / 2, -f.size * 0.32, f.size, f.size * 0.64);
+      ctx.restore();
+      if (shine > 0.93 && Math.abs(face) > 0.6) drawGlow(f.x, f.y, f.size * 3, (shine - 0.93) * 12);
+    }
+  }
+
+  function drawGlints(scrollDelta) {
+    if (glints.length < 2 && Math.random() < 0.011) glints.push(makeGlint());
+    glints = glints.filter((g) => g.life < g.max);
+    for (const g of glints) {
+      g.life++;
+      g.y -= scrollDelta * 0.6;
+      const t = g.life / g.max;
+      const a = Math.sin(t * Math.PI);
+      const r = g.size * (0.6 + 0.4 * a);
+      ctx.save();
+      ctx.translate(g.x, g.y);
+      ctx.rotate(g.rot + t * 0.6);
+      ctx.fillStyle = `rgba(255, 240, 205, ${a * 0.9})`;
+      ctx.beginPath();
+      ctx.moveTo(0, -r);
+      ctx.quadraticCurveTo(0, 0, r, 0);
+      ctx.quadraticCurveTo(0, 0, 0, r);
+      ctx.quadraticCurveTo(0, 0, -r, 0);
+      ctx.quadraticCurveTo(0, 0, 0, -r);
+      ctx.fill();
+      ctx.restore();
+      drawGlow(g.x, g.y, r * 1.6, a * 0.7);
+    }
+  }
+
+  function drawEmbers() {
+    if (embers.length < 2 && Math.random() < 0.004) embers.push(makeEmber());
     embers = embers.filter((e) => e.life < e.max);
     for (const e of embers) {
       e.life++;
       e.x += e.vx;
       e.y += e.vy;
-      const t = e.life / e.max;
-      const a = Math.sin(t * Math.PI) * 0.9;
+      const a = Math.sin((e.life / e.max) * Math.PI) * 0.85;
       const speed = Math.hypot(e.vx, e.vy);
       const tx = e.x - (e.vx / speed) * e.len;
       const ty = e.y - (e.vy / speed) * e.len;
       const grad = ctx.createLinearGradient(e.x, e.y, tx, ty);
-      grad.addColorStop(0, `rgba(255, 210, 140, ${a})`);
-      grad.addColorStop(1, "rgba(255, 110, 30, 0)");
+      grad.addColorStop(0, `rgba(${emberHead}, ${a})`);
+      grad.addColorStop(1, `rgba(${emberTail}, 0)`);
       ctx.strokeStyle = grad;
       ctx.lineWidth = 1.6;
       ctx.lineCap = "round";
@@ -152,6 +286,19 @@ function startDust() {
     }
   }
 
+  function draw() {
+    const scrollDelta = Math.max(-60, Math.min(60, window.scrollY - lastScroll));
+    lastScroll = window.scrollY;
+    ctx.clearRect(0, 0, width, height);
+    ctx.globalCompositeOperation = "lighter";
+    drawMotes(scrollDelta);
+    drawEmbers();
+    drawGlints(scrollDelta);
+    ctx.globalCompositeOperation = "source-over";
+    drawFlakes(scrollDelta);
+    cutShields();
+  }
+
   function loop() {
     if (!running) return;
     draw();
@@ -159,9 +306,10 @@ function startDust() {
   }
 
   function update() {
-    const shouldRun = visible && !document.hidden && !reducedMotion;
+    const shouldRun = !document.hidden && !reducedMotion;
     if (shouldRun && !running) {
       running = true;
+      lastScroll = window.scrollY;
       frame = requestAnimationFrame(loop);
     } else if (!shouldRun && running) {
       running = false;
@@ -170,14 +318,22 @@ function startDust() {
   }
 
   resize();
-  if (reducedMotion) draw();
+  measureShields();
+  if (reducedMotion) {
+    draw();
+    let pending = false;
+    window.addEventListener("scroll", () => {
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(() => { pending = false; draw(); });
+    }, { passive: true });
+  }
   let resizeTimer;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => { resize(); if (reducedMotion) draw(); }, 150);
+    resizeTimer = setTimeout(() => { resize(); measureShields(); if (reducedMotion) draw(); }, 150);
   });
   document.addEventListener("visibilitychange", update);
-  new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; update(); }).observe(hero);
   update();
 }
 
@@ -231,10 +387,11 @@ function renderWish(wish) {
 function showWishes(wishes, highlightFirst) {
   const list = document.getElementById("wish-list");
   list.replaceChildren();
+  document.querySelector(".credits__title").hidden = !wishes.length;
   if (!wishes.length) {
     const empty = document.createElement("li");
     empty.className = "wish-empty";
-    empty.textContent = "Chưa có lời chúc nào — bạn hãy là người đầu tiên nhé.";
+    empty.textContent = "Chưa có lời chúc nào, bạn mở hàng giúp mình nhé.";
     list.append(empty);
     return;
   }
@@ -242,6 +399,7 @@ function showWishes(wishes, highlightFirst) {
   if (highlightFirst) items[0].classList.add("is-new");
   list.append(...items);
   list.scrollTop = 0;
+  list.classList.toggle("is-overflowing", list.scrollHeight > list.clientHeight);
 }
 
 async function loadWishes(highlightFirst = false) {
@@ -249,7 +407,9 @@ async function loadWishes(highlightFirst = false) {
   try {
     const res = await fetch(CONFIG.guestbookUrl, { cache: "no-store" });
     const data = await res.json();
-    if (data.ok) showWishes(data.wishes, highlightFirst);
+    if (!data.ok) return;
+    document.getElementById("anon-field").hidden = !(data.version >= 2);
+    showWishes(data.wishes, highlightFirst);
   } catch (err) {
     console.error("Could not load wishes", err);
   }
@@ -274,13 +434,20 @@ function setupForm() {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const field = (key) => form.elements.namedItem(key).value;
+    const anonymous = form.elements.namedItem("anonymous");
     const payload = {
       name: field("name").trim(),
+      slot: field("slot"),
       message: field("message").trim(),
+      anonymous: !anonymous.closest("label").hidden && anonymous.checked,
       website: field("website"),
     };
     if (!payload.name || !payload.message) {
       setStatus("Bạn điền giúp mình tên và lời chúc nhé.", "error");
+      return;
+    }
+    if (!payload.slot) {
+      setStatus("Bạn chọn giúp mình lúc nào ghé nhé.", "error");
       return;
     }
     button.disabled = true;
@@ -294,7 +461,7 @@ function setupForm() {
       const data = await res.json();
       if (!data.ok) throw new Error(data.error || "unknown");
       form.reset();
-      setStatus("Cảm ơn bạn đã gửi lời chúc!", "ok");
+      setStatus("Mình nhận được rồi, cảm ơn bạn nhiều!", "ok");
       await loadWishes(true);
     } catch (err) {
       console.error("Could not send wish", err);
@@ -307,7 +474,7 @@ function setupForm() {
 
 startCountdown();
 buildReel();
-startDust();
+startSparkles();
 setupTopbar();
 setupReveal();
 setupForm();
