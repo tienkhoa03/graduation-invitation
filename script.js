@@ -416,6 +416,80 @@ function setupReveal() {
   items.forEach((el) => io.observe(el));
 }
 
+function setupMusic() {
+  const button = document.getElementById("music");
+  const audio = new Audio("audio/theme.mp3");
+  audio.loop = true;
+  audio.preload = "none";
+  audio.volume = 0;
+  const label = button.querySelector(".music__label");
+  const store = {
+    get() { try { return localStorage.getItem("music") === "on"; } catch { return false; } },
+    set(on) { try { localStorage.setItem("music", on ? "on" : "off"); } catch {} },
+  };
+  let wanted = false;
+  let fadeId = 0;
+
+  function fadeTo(target, done) {
+    cancelAnimationFrame(fadeId);
+    const start = audio.volume;
+    const t0 = performance.now();
+    const step = (now) => {
+      const k = Math.min(1, (now - t0) / 1200);
+      audio.volume = Math.min(1, Math.max(0, start + (target - start) * k));
+      if (k < 1) fadeId = requestAnimationFrame(step);
+      else if (done) done();
+    };
+    fadeId = requestAnimationFrame(step);
+  }
+
+  function render(on) {
+    button.setAttribute("aria-pressed", String(on));
+    const text = on ? "Tắt nhạc nền" : "Bật nhạc nền";
+    button.setAttribute("aria-label", text);
+    button.title = text;
+    label.textContent = on ? "Đang phát" : "Nhạc";
+  }
+
+  async function play() {
+    wanted = true;
+    render(true);
+    try {
+      await audio.play();
+      fadeTo(0.55);
+    } catch {
+      wanted = false;
+      render(false);
+    }
+  }
+
+  function pause() {
+    wanted = false;
+    render(false);
+    fadeTo(0, () => audio.pause());
+  }
+
+  button.addEventListener("click", () => {
+    if (wanted) pause(); else play();
+    store.set(wanted);
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (!wanted) return;
+    if (document.hidden) audio.pause();
+    else audio.play().catch(() => {});
+  });
+
+  if (store.get()) {
+    const resume = (event) => {
+      if (event.target.closest && event.target.closest("#music")) return;
+      if (!wanted) play();
+    };
+    document.addEventListener("pointerdown", resume, { once: true });
+    document.addEventListener("keydown", resume, { once: true });
+  }
+}
+
 function setupSnaps() {
   const snaps = document.querySelectorAll(".scatter .snap");
   snaps.forEach((snap) => snap.addEventListener("click", () => {
@@ -535,5 +609,6 @@ startSparkles();
 setupTopbar();
 setupReveal();
 setupSnaps();
+setupMusic();
 setupForm();
 loadWishes();
