@@ -437,6 +437,12 @@ p { text-wrap: pretty; }
 
 .arrow-link:hover::after { width: 52px; }
 
+.reel-clip {
+  position: relative;
+  z-index: 5;
+  overflow-x: clip;
+}
+
 .reel {
   position: relative;
   z-index: 5;
@@ -855,11 +861,9 @@ p { text-wrap: pretty; }
   padding: clamp(26px, 4vw, 40px);
   background:
     radial-gradient(120% 90% at 100% 0%, rgba(var(--accent-rgb), 0.12), transparent 60%),
-    rgba(18, 12, 7, 0.86);
+    #140d07;
   border: 1px solid var(--rule);
   box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.9);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
 }
 
 .field { display: grid; gap: 2px; }
