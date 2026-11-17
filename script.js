@@ -383,7 +383,7 @@ function renderWish(wish) {
   msg.textContent = wish.message;
   const time = document.createElement("p");
   time.className = "wish__time";
-  const date = new Date(wish.time);
+  const date = new Date(String(wish.time).replace(/\s*\(.*\)\s*$/, ""));
   time.textContent = isNaN(date) ? "" : formatTime(date);
   li.append(msg, time);
   return li;

@@ -36,7 +36,7 @@ function doGet() {
   const wishes = rows
     .filter((r) => r[1] && r[2] && !r[3])
     .map((r) => ({
-      time: r[0] instanceof Date ? r[0].toISOString() : String(r[0]),
+      time: Object.prototype.toString.call(r[0]) === "[object Date]" ? r[0].toISOString() : String(r[0]),
       message: String(r[2]),
     }))
     .reverse();
