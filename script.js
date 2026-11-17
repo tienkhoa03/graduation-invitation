@@ -491,7 +491,7 @@ function setupMusic() {
 }
 
 function setupSnaps() {
-  const snaps = document.querySelectorAll(".scatter .snap");
+  const snaps = document.querySelectorAll(".letter .snap");
   snaps.forEach((snap) => snap.addEventListener("click", () => {
     const open = !snap.classList.contains("is-active");
     snaps.forEach((other) => other.classList.remove("is-active"));

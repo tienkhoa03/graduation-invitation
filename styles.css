@@ -570,10 +570,12 @@ p { text-wrap: pretty; }
   z-index: -1;
   background: center / cover no-repeat;
   opacity: 0.6;
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 24%, #000 76%, transparent);
-  mask-image: linear-gradient(180deg, transparent, #000 24%, #000 76%, transparent);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 min(24%, 170px), #000 calc(100% - min(24%, 170px)), transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 min(24%, 170px), #000 calc(100% - min(24%, 170px)), transparent);
   pointer-events: none;
 }
+
+.band--letter { padding-bottom: clamp(32px, 4vw, 48px); }
 
 .band--letter::before { background-image: url("images/campus/letter.jpg?v=2"); }
 .band--schedule::before { background-image: url("images/campus/schedule.jpg?v=2"); }
@@ -643,15 +645,15 @@ p { text-wrap: pretty; }
   filter: sepia(0.12) contrast(1.04) saturate(0.92);
 }
 
-.scatter .snap { cursor: pointer; }
+.letter .snap { cursor: pointer; }
 
-.scatter .snap img {
+.letter .snap img {
   filter: sepia(0.12) contrast(1.04) saturate(0.88) brightness(0.8);
   transition: filter 0.5s var(--ease);
 }
 
-.scatter .snap:hover img,
-.scatter .snap.is-active img { filter: sepia(0.12) contrast(1.04) saturate(0.92); }
+.letter .snap:hover img,
+.letter .snap.is-active img { filter: sepia(0.12) contrast(1.04) saturate(0.92); }
 
 .snap--wide img { aspect-ratio: 4 / 3; }
 
@@ -683,6 +685,8 @@ p { text-wrap: pretty; }
 }
 
 .scatter .snap { width: 30%; max-width: 210px; margin: 0 -1.5%; }
+.letter__family { margin-top: 44px; }
+.snap--k { --tilt: -2deg; width: 38%; max-width: 210px; margin: 0 auto; }
 .scatter .snap--wide { width: 36%; max-width: 260px; align-self: center; }
 .snap--a { --tilt: -6deg; }
 .snap--b { --tilt: 4deg; z-index: 1; }
@@ -707,22 +711,25 @@ p { text-wrap: pretty; }
 @media (max-width: 559px) {
   .scatter .snap { padding: 5px 5px 0; }
   .scatter .snap figcaption { font-size: 0.85rem; }
+  .snap--k { padding: 5px 5px 0; }
 }
 
 @media (min-width: 1200px) {
-  .letter { min-height: 940px; display: flex; align-items: center; justify-content: center; padding-top: 70px; padding-bottom: 90px; }
+  .letter { min-height: 1100px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 40px; padding-bottom: 0; }
+  .letter__family { margin-top: 40px; }
+  .snap--k { width: 180px; }
   .scatter { position: absolute; inset: 0 var(--gutter); margin: 0; pointer-events: none; }
   .scatter .snap { position: absolute; width: 190px; max-width: none; margin: 0; pointer-events: auto; }
   .scatter .snap--a { left: 10px; top: 0; }
-  .scatter .snap--b { left: -10px; top: 330px; width: 230px; }
-  .scatter .snap--e { left: 40px; bottom: 0; width: 180px; }
-  .scatter .snap--c { right: 20px; top: -10px; }
-  .scatter .snap--d { right: 50px; top: 310px; width: 175px; }
-  .scatter .snap--f { right: -10px; bottom: 30px; width: 230px; }
-  .scatter .snap--g { left: 56%; bottom: -20px; width: 180px; }
-  .scatter .snap--i { left: 27.5%; bottom: 20px; width: 230px; }
-  .scatter .snap--h { left: 52%; top: -10px; width: 230px; }
   .scatter .snap--j { left: 26%; top: -30px; width: 180px; }
+  .scatter .snap--g { left: 54%; top: -15px; width: 180px; }
+  .scatter .snap--c { right: 20px; top: -10px; }
+  .scatter .snap--e { left: -10px; top: 300px; width: 180px; }
+  .scatter .snap--d { right: 20px; top: 295px; width: 175px; }
+  .scatter .snap--b { left: 70px; top: 610px; width: 230px; }
+  .scatter .snap--f { right: 50px; top: 630px; width: 230px; }
+  .scatter .snap--h { left: 25%; bottom: 0; width: 230px; }
+  .scatter .snap--i { left: 53%; bottom: 15px; width: 230px; }
 }
 
 .section__head { margin-bottom: clamp(36px, 5vw, 56px); }
