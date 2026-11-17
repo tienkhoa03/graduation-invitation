@@ -559,19 +559,18 @@ p { text-wrap: pretty; }
 
 .band {
   position: relative;
-  isolation: isolate;
   padding: clamp(56px, 7vw, 96px) 0;
 }
 
 .band::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -130px 0;
   z-index: -1;
   background: center / cover no-repeat;
   opacity: 0.6;
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 min(24%, 170px), #000 calc(100% - min(24%, 170px)), transparent);
-  mask-image: linear-gradient(180deg, transparent, #000 min(24%, 170px), #000 calc(100% - min(24%, 170px)), transparent);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 260px, #000 calc(100% - 260px), transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 260px, #000 calc(100% - 260px), transparent);
   pointer-events: none;
 }
 
@@ -581,7 +580,7 @@ p { text-wrap: pretty; }
 .band--schedule::before { background-image: url("images/campus/schedule.jpg?v=2"); }
 .band--venue::before { background-image: url("images/campus/venue.jpg?v=3"); }
 .band--wishes::before { background-image: url("images/campus/wishes.jpg?v=2"); }
-.band--footer::before { background-image: url("images/campus/footer.jpg?v=2"); opacity: 0.45; }
+.band--footer::before { background-image: url("images/campus/footer.jpg?v=2"); opacity: 0.45; bottom: 0; }
 
 .band__inner {
   position: relative;
