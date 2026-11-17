@@ -565,7 +565,8 @@ p { text-wrap: pretty; }
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.snap:hover { transform: rotate(0deg) scale(1.03); }
+.snap:hover,
+.snap.is-active { transform: rotate(0deg) scale(1.03); z-index: 3; }
 
 .snap img {
   width: 100%;
@@ -574,6 +575,16 @@ p { text-wrap: pretty; }
   object-fit: cover;
   filter: sepia(0.12) contrast(1.04) saturate(0.92);
 }
+
+.scatter .snap { cursor: pointer; }
+
+.scatter .snap img {
+  filter: sepia(0.12) contrast(1.04) saturate(0.88) brightness(0.8);
+  transition: filter 0.5s var(--ease);
+}
+
+.scatter .snap:hover img,
+.scatter .snap.is-active img { filter: sepia(0.12) contrast(1.04) saturate(0.92); }
 
 .snap--wide img { aspect-ratio: 4 / 3; }
 
@@ -614,6 +625,7 @@ p { text-wrap: pretty; }
 .snap--g { --tilt: 2deg; }
 .snap--h { --tilt: -3deg; }
 .snap--i { --tilt: 4deg; }
+.snap--j { --tilt: 4deg; }
 .scatter .snap--b { order: 2; }
 .scatter .snap--c { order: 1; }
 .scatter .snap--d { order: 3; }
@@ -622,6 +634,7 @@ p { text-wrap: pretty; }
 .scatter .snap--g,
 .scatter .snap--h,
 .scatter .snap--i { order: 4; }
+.scatter .snap--j { order: 5; }
 
 @media (max-width: 559px) {
   .scatter .snap { padding: 5px 5px 0; }
@@ -640,7 +653,8 @@ p { text-wrap: pretty; }
   .scatter .snap--f { right: -10px; bottom: 30px; width: 230px; }
   .scatter .snap--g { left: 56%; bottom: -20px; width: 180px; }
   .scatter .snap--i { left: 27.5%; bottom: 20px; width: 230px; }
-  .scatter .snap--h { left: 50%; top: -30px; width: 230px; margin-left: -115px; }
+  .scatter .snap--h { left: 52%; top: -10px; width: 230px; }
+  .scatter .snap--j { left: 26%; top: -30px; width: 180px; }
 }
 
 .section__head { margin-bottom: clamp(36px, 5vw, 56px); }

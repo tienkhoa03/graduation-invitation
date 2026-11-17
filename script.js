@@ -16,6 +16,7 @@ const REEL_FRAMES = [
   "images/frames/07.jpg?v=2",
   "images/frames/18.jpg",
   "images/frames/08.jpg?v=2",
+  "images/frames/21.jpg",
   "images/frames/09.jpg?v=2",
   "images/frames/19.jpg",
   "images/frames/10.jpg?v=2",
@@ -360,6 +361,15 @@ function setupReveal() {
   items.forEach((el) => io.observe(el));
 }
 
+function setupSnaps() {
+  const snaps = document.querySelectorAll(".scatter .snap");
+  snaps.forEach((snap) => snap.addEventListener("click", () => {
+    const open = !snap.classList.contains("is-active");
+    snaps.forEach((other) => other.classList.remove("is-active"));
+    snap.classList.toggle("is-active", open);
+  }));
+}
+
 function formatTime(date) {
   const pad = (n) => String(n).padStart(2, "0");
   return `${pad(date.getDate())}/${pad(date.getMonth() + 1)} · ${pad(date.getHours())}:${pad(date.getMinutes())}`;
@@ -477,5 +487,6 @@ buildReel();
 startSparkles();
 setupTopbar();
 setupReveal();
+setupSnaps();
 setupForm();
 loadWishes();
